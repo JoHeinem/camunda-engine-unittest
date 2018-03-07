@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+  <cmmn:case id="oneProcessTaskCase" name="One Process Task Case&#10;">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="A CasePlanModel">
+      <cmmn:planItem id="PI_ProcessTask_1" name="First Task" definitionRef="ProcessTask_1">
+        <cmmn:itemControl id="PlanItemControl_190dhu7">
+          <cmmn:manualActivationRule id="ManualActivationRule_14h6m5g">
+            <cmmn:condition id="Expression_1k7dns3">${true}</cmmn:condition>
+          </cmmn:manualActivationRule>
+        </cmmn:itemControl>
+      </cmmn:planItem>
+      <cmmn:planItem id="PI_ProcessTask_2" name="Second Task" definitionRef="ProcessTask_2">
+        <cmmn:itemControl id="PlanItemControl_1dxsk9u">
+          <cmmn:manualActivationRule id="ManualActivationRule_098ro8h">
+            <cmmn:condition id="Expression_1lo09zk">${false}</cmmn:condition>
+          </cmmn:manualActivationRule>
+        </cmmn:itemControl>
+        <cmmn:entryCriterion id="EntryCriterion_0gmyoqd" sentryRef="Sentry_0wanyl2" />
+      </cmmn:planItem>
+      <cmmn:sentry id="Sentry_0wanyl2">
+        <cmmn:planItemOnPart id="PlanItemOnPart_1tt62zj" sourceRef="PI_ProcessTask_1">        <cmmn:standardEvent>complete</cmmn:standardEvent>
+</cmmn:planItemOnPart>
+      </cmmn:sentry>
+      <cmmn:processTask id="ProcessTask_1" processRef="oneTaskProcess" />
+      <cmmn:processTask id="ProcessTask_2" processRef="oneTaskProcess" />
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="safdsaf" name="One Process Task Case&#10;">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="114" y="63" width="534" height="389" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_15akgbd_di" cmmnElementRef="PI_ProcessTask_1">
+        <dc:Bounds x="150" y="96" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_0gmyoqd_di" cmmnElementRef="EntryCriterion_0gmyoqd">
+        <dc:Bounds x="372" y="122" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_1tt62zj_di" cmmnElementRef="PlanItemOnPart_1tt62zj" targetCMMNElementRef="EntryCriterion_0gmyoqd" isStandardEventVisible="true">
+        <di:waypoint xsi:type="dc:Point" x="250" y="136" />
+        <di:waypoint xsi:type="dc:Point" x="372" y="136" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="285" y="126" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="PlanItem_1207oyt_di" cmmnElementRef="PI_ProcessTask_2">
+        <dc:Bounds x="382" y="96" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>

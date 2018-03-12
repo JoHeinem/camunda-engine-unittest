@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cmmn:definitions xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:cmmn="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/cmmn" id="Test" targetNamespace="http://bpmn.io/schema/cmmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+  <cmmn:case id="oneProcessTaskCase" name="Host Based Delegation">
+    <cmmn:casePlanModel id="CasePlanModel_1" name="Host Based Delegation" autoComplete="true">
+      <cmmn:extensionElements />
+      <cmmn:planItem id="S03DelegationPreparationId" name="Pre-Delegation" definitionRef="Stage_0r5w26u">
+        <cmmn:itemControl id="PlanItemControl_0a3deq6">
+          <cmmn:requiredRule id="RequiredRule_0sa3z1c">
+            <cmmn:condition id="Expression_1up0wkx">${false}</cmmn:condition>
+          </cmmn:requiredRule>
+          <cmmn:manualActivationRule id="ManualActivationRule_1hqxs18">
+            <cmmn:condition id="Expression_1kw0b42">${false}</cmmn:condition>
+          </cmmn:manualActivationRule>
+        </cmmn:itemControl>
+      </cmmn:planItem>
+      <cmmn:stage id="Stage_0r5w26u" name="Pre Delegation">
+        <cmmn:extensionElements />
+        <cmmn:planItem id="PI_ProcessTask_2" definitionRef="ProcessTask_1ppuu9p">
+          <cmmn:itemControl id="PlanItemControl_0m588af">
+            <cmmn:requiredRule id="RequiredRule_1orzb88">
+              <cmmn:condition id="Expression_06a491c">${false}</cmmn:condition>
+            </cmmn:requiredRule>
+            <cmmn:manualActivationRule id="ManualActivationRule_1xhxsle">
+              <cmmn:condition id="Expression_1waa3l8">${false}</cmmn:condition>
+            </cmmn:manualActivationRule>
+          </cmmn:itemControl>
+          <cmmn:entryCriterion id="EntryCriterion_12kzqs4" sentryRef="Sentry_1aps66n" />
+        </cmmn:planItem>
+        <cmmn:planItem id="PI_ProcessTask_1" definitionRef="ProcessTask_160g78r">
+          <cmmn:itemControl id="PlanItemControl_0fjrvkw">
+            <cmmn:requiredRule id="RequiredRule_1hduw0b">
+              <cmmn:condition id="Expression_0zay8ki">${false}</cmmn:condition>
+            </cmmn:requiredRule>
+            <cmmn:manualActivationRule id="ManualActivationRule_0960350">
+              <cmmn:condition id="Expression_11ptk7o">${true}</cmmn:condition>
+            </cmmn:manualActivationRule>
+          </cmmn:itemControl>
+        </cmmn:planItem>
+        <cmmn:sentry id="Sentry_1aps66n">
+          <cmmn:planItemOnPart id="PlanItemOnPart_0vkio6o" sourceRef="PI_ProcessTask_1">          <cmmn:standardEvent>complete</cmmn:standardEvent>
+</cmmn:planItemOnPart>
+        </cmmn:sentry>
+        <cmmn:processTask id="ProcessTask_1ppuu9p" name="Local Delegation Contract" processRef="localDelegationContractId">
+          <cmmn:extensionElements>
+            <camunda:caseExecutionListener event="manualStart" expression="${execution.setVariable(&#39;startedLocalDelegationContract&#39;,&#39;1&#39;)}" />
+            <camunda:in variables="all" />
+          </cmmn:extensionElements>
+        </cmmn:processTask>
+        <cmmn:processTask id="ProcessTask_160g78r" name="Compensation and Benefits" processRef="compensationAndBenefitProcess">
+          <cmmn:extensionElements>
+            <camunda:in variables="all" />
+          </cmmn:extensionElements>
+        </cmmn:processTask>
+      </cmmn:stage>
+    </cmmn:casePlanModel>
+  </cmmn:case>
+  <cmmndi:CMMNDI>
+    <cmmndi:CMMNDiagram id="asd" name="Host Based Delegation" documentation="REQ_6133">
+      <cmmndi:Size xsi:type="dc:Dimension" width="500" height="500" />
+      <cmmndi:CMMNShape id="DI_CasePlanModel_1" cmmnElementRef="CasePlanModel_1">
+        <dc:Bounds x="54" y="70" width="507" height="229" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_0uz049s_di" cmmnElementRef="PI_ProcessTask_2">
+        <dc:Bounds x="382" y="133" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="EntryCriterion_12kzqs4_di" cmmnElementRef="EntryCriterion_12kzqs4">
+        <dc:Bounds x="372" y="157" width="20" height="28" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="PlanItem_1fbapk3_di" cmmnElementRef="PI_ProcessTask_1">
+        <dc:Bounds x="135" y="135" width="100" height="80" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNEdge id="PlanItemOnPart_0vkio6o_di" cmmnElementRef="PlanItemOnPart_0vkio6o" targetCMMNElementRef="EntryCriterion_12kzqs4" isStandardEventVisible="true">
+        <di:waypoint xsi:type="dc:Point" x="235" y="174" />
+        <di:waypoint xsi:type="dc:Point" x="304" y="174" />
+        <di:waypoint xsi:type="dc:Point" x="304" y="171" />
+        <di:waypoint xsi:type="dc:Point" x="372" y="171" />
+        <cmmndi:CMMNLabel>
+          <dc:Bounds x="278" y="145" width="51" height="12" />
+        </cmmndi:CMMNLabel>
+      </cmmndi:CMMNEdge>
+      <cmmndi:CMMNShape id="PlanItem_0wy3015_di" cmmnElementRef="S03DelegationPreparationId">
+        <dc:Bounds x="89" y="113" width="413" height="122" />
+        <cmmndi:CMMNLabel />
+      </cmmndi:CMMNShape>
+    </cmmndi:CMMNDiagram>
+  </cmmndi:CMMNDI>
+</cmmn:definitions>

@@ -12,6 +12,10 @@
  */
 package org.camunda.bpm.unittest;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.camunda.bpm.engine.CaseService;
 import org.camunda.bpm.engine.HistoryService;
 import org.camunda.bpm.engine.RepositoryService;
@@ -30,10 +34,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 /**
  * @author Johannes Heinemann
  */
@@ -43,87 +43,86 @@ public class SimpleTestCase {
   public ProcessEngineRule rule = new ProcessEngineRule();
 
   private RuntimeService runtimeService;
+
   private RepositoryService repositoryService;
+
   private HistoryService historyService;
+
   private CaseService caseService;
+
   private TaskService taskService;
 
   @Before
   public void init() {
-    repositoryService = rule.getRepositoryService();
-    historyService = rule.getHistoryService();
-    caseService = rule.getCaseService();
-    taskService = rule.getTaskService();
-    runtimeService = rule.getRuntimeService();
+    this.repositoryService = this.rule.getRepositoryService();
+    this.historyService = this.rule.getHistoryService();
+    this.caseService = this.rule.getCaseService();
+    this.taskService = this.rule.getTaskService();
+    this.runtimeService = this.rule.getRuntimeService();
   }
 
   @Test
-  @Deployment(resources = {"oneProcessTaskCaseWithManualActivation.cmmn", "oneTaskProcess.bpmn20.xml"})
+  @Deployment(resources = { "hostBasedDelegation.cmmn", "compensationAndBenefits.bpmn", "localDelegationContract.bpmn" })
   public void testHistoricCaseActivityCalledProcessInstanceId() {
     String taskId = "PI_ProcessTask_1";
 
-    createCaseInstanceByKey("oneProcessTaskCase").getId();
+    this.createCaseInstanceByKey("oneProcessTaskCase").getId();
 
     // as long as the process task is not activated there should be no process instance
-    assertCount(0, runtimeService.createProcessInstanceQuery());
+    this.assertCount(0, this.runtimeService.createProcessInstanceQuery());
 
-    HistoricCaseActivityInstance historicInstance = queryHistoricActivityCaseInstance(taskId);
+    HistoricCaseActivityInstance historicInstance = this.queryHistoricActivityCaseInstance(taskId);
     assertNull(historicInstance.getCalledProcessInstanceId());
 
     // start process task manually to create case instance
-    CaseExecution processTask = queryCaseExecutionByActivityId(taskId);
-    manualStart(processTask.getId());
+    CaseExecution processTask = this.queryCaseExecutionByActivityId(taskId);
+    this.manualStart(processTask.getId());
 
     // there should exist a new process instance
-    ProcessInstance calledProcessInstance = runtimeService.createProcessInstanceQuery().singleResult();
+    ProcessInstance calledProcessInstance = this.runtimeService.createProcessInstanceQuery().singleResult();
     assertNotNull(calledProcessInstance);
 
     // check that the called process instance id was correctly set
-    historicInstance = queryHistoricActivityCaseInstance(taskId);
+    historicInstance = this.queryHistoricActivityCaseInstance(taskId);
     assertEquals(calledProcessInstance.getId(), historicInstance.getCalledProcessInstanceId());
 
     // complete task
-    Task task = taskService.createTaskQuery().singleResult();
-    taskService.complete(task.getId());
+    Task task = this.taskService.createTaskQuery().singleResult();
+    this.taskService.complete(task.getId());
+
+    // there should exist a new process instance
+    calledProcessInstance = this.runtimeService.createProcessInstanceQuery().singleResult();
+    assertNotNull(calledProcessInstance);
 
     // check that the called process instance id of the second task was correctly set
-    historicInstance = queryHistoricActivityCaseInstance("PI_ProcessTask_2");
+    historicInstance = this.queryHistoricActivityCaseInstance("PI_ProcessTask_2");
     assertNotNull(historicInstance.getCalledProcessInstanceId());
   }
 
   private void manualStart(final String caseExecutionId) {
-    caseService
-      .withCaseExecution(caseExecutionId)
-      .manualStart();
+    this.caseService.withCaseExecution(caseExecutionId).manualStart();
   }
 
-  private CaseExecution queryCaseExecutionByActivityId(String activityId) {
-    return caseService
-      .createCaseExecutionQuery()
-      .activityId(activityId)
-      .singleResult();
+  private CaseExecution queryCaseExecutionByActivityId(final String activityId) {
+    return this.caseService.createCaseExecutionQuery().activityId(activityId).singleResult();
   }
 
-  private HistoricCaseActivityInstance queryHistoricActivityCaseInstance(String activityId) {
-    HistoricCaseActivityInstance historicActivityInstance = historicQuery()
-      .caseActivityId(activityId)
-      .singleResult();
+  private HistoricCaseActivityInstance queryHistoricActivityCaseInstance(final String activityId) {
+    HistoricCaseActivityInstance historicActivityInstance = this.historicQuery().caseActivityId(activityId)
+        .singleResult();
     assertNotNull("No historic activity instance found for activity id: " + activityId, historicActivityInstance);
     return historicActivityInstance;
   }
 
   private HistoricCaseActivityInstanceQuery historicQuery() {
-    return historyService.createHistoricCaseActivityInstanceQuery();
+    return this.historyService.createHistoricCaseActivityInstanceQuery();
   }
 
-
-  private void assertCount(long count, Query<?, ?> historicQuery) {
+  private void assertCount(final long count, final Query<?, ?> historicQuery) {
     assertEquals(count, historicQuery.count());
   }
 
-  private CaseInstance createCaseInstanceByKey(String caseDefinitionKey) {
-    return caseService
-      .withCaseDefinitionByKey(caseDefinitionKey)
-      .create();
+  private CaseInstance createCaseInstanceByKey(final String caseDefinitionKey) {
+    return this.caseService.withCaseDefinitionByKey(caseDefinitionKey).create();
   }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+  <bpmn:collaboration id="compensationAndBenefitCase">
+    <bpmn:participant id="compensationAndBenefitLaneId" name="Compensation and Benefits" processRef="compensationAndBenefitProcess" />
+  </bpmn:collaboration>
+  <bpmn:process id="compensationAndBenefitProcess" name="Compensation and Benefits" isExecutable="true">
+    <bpmn:laneSet>
+      <bpmn:lane id="cmLaneId" name="CM">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0o1pn11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_1</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="cmsHomeLaneId" name="CMS Home" />
+      <bpmn:lane id="cmsHostLaneId" name="CMS Host" />
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_0r3gc7x</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_0o1pn11" name="Delegation related benefits determined">
+      <bpmn:incoming>SequenceFlow_0pq1gzv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0r3gc7x" sourceRef="StartEvent_1" targetRef="UserTask_1" />
+    <bpmn:sequenceFlow id="SequenceFlow_0pq1gzv" sourceRef="UserTask_1" targetRef="EndEvent_0o1pn11" />
+    <bpmn:userTask id="UserTask_1" name="Perform Income Calculation">
+      <bpmn:incoming>SequenceFlow_0r3gc7x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0pq1gzv</bpmn:outgoing>
+    </bpmn:userTask>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="compensationAndBenefitCase">
+      <bpmndi:BPMNShape id="Participant_0g7jn6f_di" bpmnElement="compensationAndBenefitLaneId">
+        <dc:Bounds x="31" y="53" width="1339" height="667" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="111" y="117" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="129" y="153" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_027xmv5_di" bpmnElement="cmLaneId">
+        <dc:Bounds x="61" y="53" width="1309" height="258" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_03prqkq_di" bpmnElement="cmsHomeLaneId">
+        <dc:Bounds x="61" y="311" width="1309" height="182" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1h3izfg_di" bpmnElement="cmsHostLaneId">
+        <dc:Bounds x="61" y="493" width="1309" height="227" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0o1pn11_di" bpmnElement="EndEvent_0o1pn11">
+        <dc:Bounds x="1251" y="117" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1225" y="154" width="87" height="36" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0r3gc7x_di" bpmnElement="SequenceFlow_0r3gc7x">
+        <di:waypoint xsi:type="dc:Point" x="147" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="315" y="135" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="186" y="114" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0pq1gzv_di" bpmnElement="SequenceFlow_0pq1gzv">
+        <di:waypoint xsi:type="dc:Point" x="415" y="135" />
+        <di:waypoint xsi:type="dc:Point" x="1251" y="135" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="788" y="114" width="90" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0j6d43i_di" bpmnElement="UserTask_1">
+        <dc:Bounds x="315" y="95" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

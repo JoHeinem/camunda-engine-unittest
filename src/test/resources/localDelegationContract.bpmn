@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="1.10.0">
   <bpmn:collaboration id="Collaboration_1n4m9ha">
     <bpmn:documentation>CMD Host</bpmn:documentation>
     <bpmn:participant id="Participant_1p3winy" name="Local Delegation Contract" processRef="localDelegationContractId" />
@@ -7,9 +7,9 @@
   <bpmn:process id="localDelegationContractId" name="Local Delegation Contract" isExecutable="true">
     <bpmn:laneSet>
       <bpmn:lane id="Lane_0s741oa" name="CMS Host">
-        <bpmn:flowNodeRef>UserTask_1</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>StartEvent_0cvvab0</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>EndEvent_0c1emo2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>UserTask_1</bpmn:flowNodeRef>
       </bpmn:lane>
     </bpmn:laneSet>
     <bpmn:sequenceFlow id="SequenceFlow_0bcgdhm" sourceRef="UserTask_1" targetRef="EndEvent_0c1emo2" />
@@ -17,13 +17,13 @@
     <bpmn:startEvent id="StartEvent_0cvvab0">
       <bpmn:outgoing>SequenceFlow_03m9lxl</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:userTask id="UserTask_1" name="Request and file local contract">
-      <bpmn:incoming>SequenceFlow_03m9lxl</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_0bcgdhm</bpmn:outgoing>
-    </bpmn:userTask>
     <bpmn:endEvent id="EndEvent_0c1emo2">
       <bpmn:incoming>SequenceFlow_0bcgdhm</bpmn:incoming>
     </bpmn:endEvent>
+    <bpmn:serviceTask id="UserTask_1" name="Request and file local contract" camunda:expression="${true}">
+      <bpmn:incoming>SequenceFlow_03m9lxl</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0bcgdhm</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1n4m9ha">
@@ -48,23 +48,23 @@
         <di:waypoint xsi:type="dc:Point" x="373" y="105" />
         <di:waypoint xsi:type="dc:Point" x="428" y="105" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="388" y="105" width="0" height="0" />
+          <dc:Bounds x="343" y="105" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="UserTask_1l27r88_di" bpmnElement="UserTask_1">
-        <dc:Bounds x="218" y="65" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_03m9lxl_di" bpmnElement="SequenceFlow_03m9lxl">
         <di:waypoint xsi:type="dc:Point" x="131" y="105" />
         <di:waypoint xsi:type="dc:Point" x="177" y="105" />
         <di:waypoint xsi:type="dc:Point" x="177" y="105" />
         <di:waypoint xsi:type="dc:Point" x="218" y="105" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="192" y="105" width="0" height="0" />
+          <dc:Bounds x="147" y="105" width="90" height="0" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Lane_0s741oa_di" bpmnElement="Lane_0s741oa">
         <dc:Bounds x="48" y="17" width="476" height="186" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="ServiceTask_0cnosal_di" bpmnElement="UserTask_1">
+        <dc:Bounds x="218" y="65" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

@@ -20,10 +20,13 @@
     <bpmn:endEvent id="EndEvent_0c1emo2">
       <bpmn:incoming>SequenceFlow_0bcgdhm</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:serviceTask id="UserTask_1" name="Request and file local contract" camunda:expression="${true}">
+    <bpmn:userTask id="UserTask_1" name="Request and file local contract">
+      <bpmn:extensionElements>
+        <camunda:taskListener class="org.camunda.bpm.unittest.CreateTaskListener" event="create" />
+      </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_03m9lxl</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0bcgdhm</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1n4m9ha">
@@ -63,7 +66,7 @@
       <bpmndi:BPMNShape id="Lane_0s741oa_di" bpmnElement="Lane_0s741oa">
         <dc:Bounds x="48" y="17" width="476" height="186" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="ServiceTask_0cnosal_di" bpmnElement="UserTask_1">
+      <bpmndi:BPMNShape id="UserTask_0i5yb19_di" bpmnElement="UserTask_1">
         <dc:Bounds x="218" y="65" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>

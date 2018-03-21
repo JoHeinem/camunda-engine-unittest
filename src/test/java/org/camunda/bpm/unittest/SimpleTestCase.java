@@ -12,19 +12,22 @@
  */
 package org.camunda.bpm.unittest;
 
+import org.camunda.bpm.engine.HistoryService;
+import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.runtime.Incident;
+import org.camunda.bpm.engine.runtime.Job;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author Johannes Heinemann
@@ -34,29 +37,45 @@ public class SimpleTestCase {
   @Rule
   public ProcessEngineRule rule = new ProcessEngineRule();
 
-  RuntimeService runtimeService;
-  RepositoryService repositoryService;
+  private RuntimeService runtimeService;
+  private RepositoryService repositoryService;
+  private HistoryService historyService;
+  private ManagementService managementService;
 
   @Before
   public void init() {
     repositoryService = rule.getRepositoryService();
+    runtimeService = rule.getRuntimeService();
+    historyService = rule.getHistoryService();
+    managementService = rule.getManagementService();
   }
 
   @Test
-  @Deployment(resources = {"testProcess.bpmn", "testProcess.png"})
+  @Deployment(resources = {"CallActivityProcess.bpmn", "Phase1CalledIncidentProcess.bpmn", "Phase2CalledProcess.bpmn"})
   public void shouldExecuteProcess() {
 
-    // given
-    String deploymentId = repositoryService.createDeploymentQuery().singleResult().getId();
-    ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().singleResult();
+    // given I start the process, which causes an incident in the called process
+    ProcessInstance callActivityProcess = runtimeService.startProcessInstanceByKey("callActivityProcess");
 
-    // when
-    InputStream stream = repositoryService.getProcessDiagram(processDefinition.getId());
+    Job job = managementService.createJobQuery().singleResult();
+    try {
+      managementService.executeJob(job.getId());
+    } catch (Exception e) {
+      System.out.println("Error was thrown!");
+    }
+    Incident incident = runtimeService.createIncidentQuery().activityId("incidentTask").singleResult();
+    assertNotNull(incident);
 
-    // then
-    assertEquals("testProcess.png", processDefinition.getDiagramResourceName());
-    assertNotNull(processDefinition.getDiagramResourceName());
-    assertNotNull(stream);
+    // when I do process instance modification
+    runtimeService.createProcessInstanceModification(
+                incident.getProcessInstanceId())
+      .cancelAllForActivity(incident.getActivityId())
+      .startAfterActivity(incident.getActivityId())
+      .execute();
+
+     // then the process should be finished
+    assertThat(runtimeService.createProcessInstanceQuery().count(), is(0L));
+
 
   }
 

@@ -12,19 +12,21 @@
  */
 package org.camunda.bpm.unittest;
 
+import org.camunda.bpm.engine.ManagementService;
 import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
-import org.camunda.bpm.engine.repository.ProcessDefinition;
+import org.camunda.bpm.engine.runtime.Job;
+import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.test.Deployment;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.InputStream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Johannes Heinemann
@@ -34,30 +36,55 @@ public class SimpleTestCase {
   @Rule
   public ProcessEngineRule rule = new ProcessEngineRule();
 
-  RuntimeService runtimeService;
-  RepositoryService repositoryService;
+  private RuntimeService runtimeService;
+  private RepositoryService repositoryService;
+  private ManagementService managementService;
 
   @Before
   public void init() {
     repositoryService = rule.getRepositoryService();
+    runtimeService = rule.getRuntimeService();
+    managementService = rule.getManagementService();
   }
 
   @Test
-  @Deployment(resources = {"testProcess.bpmn", "testProcess.png"})
-  public void shouldExecuteProcess() {
+  @Deployment(resources = {"testProcess.bpmn"})
+  public void shouldExecuteProcess() throws InterruptedException {
 
     // given
-    String deploymentId = repositoryService.createDeploymentQuery().singleResult().getId();
-    ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().singleResult();
+    Map<String, Object> variables = new HashMap<String, Object>();
+    variables.put("iterations", 3);
+    runtimeService.startProcessInstanceByKey("testProcess", variables);
 
     // when
-    InputStream stream = repositoryService.getProcessDiagram(processDefinition.getId());
+    List<ProcessInstance> runningInstances = runtimeService.createProcessInstanceQuery().list();
+    while(!runningInstances.isEmpty()) {
+      executeAllJobs();
+      runningInstances = runtimeService.createProcessInstanceQuery().list();
+    }
 
     // then
-    assertEquals("testProcess.png", processDefinition.getDiagramResourceName());
-    assertNotNull(processDefinition.getDiagramResourceName());
-    assertNotNull(stream);
 
+  }
+
+  private void executeAllJobs() throws InterruptedException {
+    List<Job> jobList = managementService.createJobQuery().list();
+    for (Job job : jobList) {
+      printOutVariableFromDatabase("Database query before task but after async before");
+      managementService.executeJob(job.getId());
+
+    }
+    Thread.sleep(200L);
+  }
+
+  private void printOutVariableFromDatabase(String whenItIsPrintedOut) {
+    VariableInstance myVariableInstance = runtimeService.createVariableInstanceQuery().variableName("myVariable").singleResult();
+    if(myVariableInstance != null) {
+      Map<String, List<Integer>> myVariable = (Map<String, List<Integer>>) myVariableInstance.getValue();
+      System.out.println("-------- " + whenItIsPrintedOut + " ----------");
+      System.out.println("My variable size: " + myVariable.size());
+      System.out.println();
+    }
   }
 
 }

@@ -17,7 +17,6 @@ import org.camunda.bpm.engine.cdi.annotation.ProcessEngineName;
 import org.camunda.bpm.engine.delegate.DelegateTask;
 import org.camunda.bpm.engine.delegate.TaskListener;
 import org.camunda.bpm.engine.variable.value.ObjectValue;
-import org.camunda.spin.Spin;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -32,13 +31,16 @@ public class SecondStepTaskListener implements TaskListener {
   protected RuntimeService runtimeService;
 
   public void notify(DelegateTask delegateTask) {
-    ObjectValue testVariable = runtimeService.getVariableLocalTyped(delegateTask.getProcessInstanceId(), "testVariable");
+    ObjectValue testVariable = delegateTask.getVariableLocalTyped("testVariable");
+    ModellingEntity value = testVariable.getValue(ModellingEntity.class);
+    System.out.println("Serializing value....");
+    delegateTask.setVariable("bar", value);
     String testVariableJson = testVariable.getValueSerialized();
 
     System.out.println(testVariableJson);
 
 
     // should work
-    TestVariable testVariableExtended = JSON(testVariableJson).mapTo(TestVariable.class);
+    ModellingEntity modellingEntityExtended = JSON(testVariableJson).mapTo(ModellingEntity.class);
   }
 }

@@ -22,7 +22,7 @@ public class FirstStepTaskListener implements TaskListener{
 
 
   public void notify(DelegateTask delegateTask) {
-    TestVariableExtended testVariable = new TestVariableExtended();
+    ChangeableEntity testVariable = new ChangeableEntity();
     testVariable.setTestField(42);
     testVariable.setAdditionalUnknownField(42);
 

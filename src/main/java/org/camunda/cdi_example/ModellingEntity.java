@@ -12,7 +12,10 @@
  */
 package org.camunda.cdi_example;
 
-public class TestVariable {
+import com.fasterxml.jackson.annotation.JsonFilter;
+
+@JsonFilter("ModellingEntity")
+public class ModellingEntity {
 
   private int testField = 0;
 
